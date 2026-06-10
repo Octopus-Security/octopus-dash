@@ -9,46 +9,46 @@
 
     :root {
       --bg: #0a0a0a;
-      --surface: #111111;
-      --border: #1e1e1e;
-      --text: #e8e8e8;
-      --muted: #555;
-      --accent: #7c6af7;
-      --green: #4caf82;
-      --yellow: #e0a84b;
-      --red: #e05555;
-      --tailscale: #6fb3d3;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --text: #f0f0f0;
+      --muted: #888;
+      --accent: #9d8ff7;
+      --green: #4fd494;
+      --yellow: #f0b84e;
+      --red: #f06060;
+      --tailscale: #7ec8e3;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-      font-size: 13px;
+      font-size: 16px;
       min-height: 100vh;
-      padding: 24px;
+      padding: 32px;
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
       border-bottom: 1px solid var(--border);
     }
 
     .device-name {
-      font-size: 22px;
+      font-size: 32px;
       font-weight: 700;
       color: var(--accent);
       letter-spacing: -0.5px;
     }
 
     .device-meta {
-      font-size: 11px;
+      font-size: 14px;
       color: var(--muted);
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
     .clock {
@@ -56,82 +56,82 @@
     }
 
     .clock-time {
-      font-size: 28px;
+      font-size: 42px;
       font-weight: 700;
-      letter-spacing: -1px;
+      letter-spacing: -2px;
       color: var(--text);
     }
 
     .clock-date {
-      font-size: 11px;
+      font-size: 14px;
       color: var(--muted);
-      margin-top: 2px;
+      margin-top: 4px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
     }
 
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
+      border-radius: 14px;
+      padding: 24px;
     }
 
     .card-title {
-      font-size: 10px;
+      font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       color: var(--muted);
-      margin-bottom: 12px;
+      margin-bottom: 18px;
     }
 
     /* Gauge */
     .gauge-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 14px;
+      margin-bottom: 10px;
     }
 
     .gauge-label {
-      width: 70px;
-      color: var(--muted);
-      font-size: 11px;
+      width: 80px;
+      color: var(--text);
+      font-size: 14px;
       flex-shrink: 0;
     }
 
     .gauge-bar {
       flex: 1;
-      height: 6px;
+      height: 10px;
       background: var(--border);
-      border-radius: 3px;
+      border-radius: 5px;
       overflow: hidden;
     }
 
     .gauge-fill {
       height: 100%;
-      border-radius: 3px;
+      border-radius: 5px;
       transition: width 0.4s ease;
     }
 
     .gauge-pct {
-      width: 36px;
+      width: 44px;
       text-align: right;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 15px;
+      font-weight: 700;
       flex-shrink: 0;
     }
 
     .gauge-sub {
-      font-size: 10px;
+      font-size: 13px;
       color: var(--muted);
-      margin-left: 80px;
+      margin-left: 94px;
       margin-top: -6px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .color-low  { background: var(--green); color: var(--green); }
@@ -140,16 +140,16 @@
 
     /* Big stat */
     .big-stat {
-      font-size: 42px;
+      font-size: 48px;
       font-weight: 700;
       letter-spacing: -2px;
       line-height: 1;
     }
 
     .big-stat-label {
-      font-size: 11px;
+      font-size: 14px;
       color: var(--muted);
-      margin-top: 6px;
+      margin-top: 8px;
     }
 
     /* Network */
@@ -157,46 +157,46 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 6px 0;
+      padding: 10px 0;
       border-bottom: 1px solid var(--border);
     }
 
     .net-row:last-child { border-bottom: none; }
 
     .net-iface {
-      font-size: 11px;
+      font-size: 14px;
       color: var(--muted);
     }
 
     .net-ip {
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 700;
     }
 
     .ts-badge {
-      font-size: 9px;
+      font-size: 11px;
       background: var(--tailscale)22;
       color: var(--tailscale);
       border: 1px solid var(--tailscale)44;
       border-radius: 4px;
-      padding: 1px 5px;
-      margin-left: 6px;
+      padding: 2px 7px;
+      margin-left: 8px;
     }
 
     /* Uptime */
     .uptime-val {
-      font-size: 20px;
+      font-size: 32px;
       font-weight: 700;
     }
 
     /* Status dot */
     .dot {
       display: inline-block;
-      width: 7px;
-      height: 7px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: var(--green);
-      margin-right: 6px;
+      margin-right: 8px;
       animation: pulse 2s infinite;
     }
 
@@ -205,12 +205,12 @@
       50% { opacity: 0.4; }
     }
 
-    .error { color: var(--red); font-size: 12px; padding: 20px 0; }
+    .error { color: var(--red); font-size: 14px; padding: 20px 0; }
 
     .temp-chip {
       display: inline-block;
-      font-size: 11px;
-      padding: 2px 8px;
+      font-size: 13px;
+      padding: 3px 10px;
       border-radius: 4px;
       margin-top: 8px;
     }
