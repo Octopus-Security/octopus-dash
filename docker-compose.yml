@@ -1,0 +1,15 @@
+services:
+  octopus-dash:
+    build: .
+    container_name: octopus_dash
+    restart: unless-stopped
+    ports:
+      - "7000:7000"
+    environment:
+      - PORT=7000
+      - DEVICE_LABEL=${DEVICE_LABEL:-Hetzner Server}
+    # Read-only host mounts so systeminformation can read real metrics
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    pid: host

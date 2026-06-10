@@ -1,0 +1,16 @@
+[Unit]
+Description=Octopus Dash — system dashboard
+After=network.target
+
+[Service]
+Type=simple
+User=kali
+WorkingDirectory=/opt/octopus-dash
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+RestartSec=5
+Environment=PORT=7000
+Environment=DEVICE_LABEL=Serpopard Pi
+
+[Install]
+WantedBy=multi-user.target

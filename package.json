@@ -1,0 +1,13 @@
+{
+  "name": "octopus-dash",
+  "version": "1.0.0",
+  "description": "Per-device system dashboard for the Octopus network",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "systeminformation": "^5.23.5"
+  }
+}

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Octopus Dash</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --text: #e8e8e8;
+      --muted: #555;
+      --accent: #7c6af7;
+      --green: #4caf82;
+      --yellow: #e0a84b;
+      --red: #e05555;
+      --tailscale: #6fb3d3;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .device-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+
+    .device-meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .clock {
+      text-align: right;
+    }
+
+    .clock-time {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--text);
+    }
+
+    .clock-date {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .card-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* Gauge */
+    .gauge-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .gauge-label {
+      width: 70px;
+      color: var(--muted);
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .gauge-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .gauge-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .gauge-pct {
+      width: 36px;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .gauge-sub {
+      font-size: 10px;
+      color: var(--muted);
+      margin-left: 80px;
+      margin-top: -6px;
+      margin-bottom: 10px;
+    }
+
+    .color-low  { background: var(--green); color: var(--green); }
+    .color-mid  { background: var(--yellow); color: var(--yellow); }
+    .color-high { background: var(--red); color: var(--red); }
+
+    /* Big stat */
+    .big-stat {
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .big-stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* Network */
+    .net-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .net-row:last-child { border-bottom: none; }
+
+    .net-iface {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .net-ip {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .ts-badge {
+      font-size: 9px;
+      background: var(--tailscale)22;
+      color: var(--tailscale);
+      border: 1px solid var(--tailscale)44;
+      border-radius: 4px;
+      padding: 1px 5px;
+      margin-left: 6px;
+    }
+
+    /* Uptime */
+    .uptime-val {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    /* Status dot */
+    .dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .error { color: var(--red); font-size: 12px; padding: 20px 0; }
+
+    .temp-chip {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="device-name" id="device-name">—</div>
+      <div class="device-meta" id="device-meta">loading…</div>
+    </div>
+    <div class="clock">
+      <div class="clock-time" id="clock-time">--:--:--</div>
+      <div class="clock-date" id="clock-date"></div>
+    </div>
+  </header>
+
+  <div class="grid" id="grid">
+    <div class="card"><div class="error">Loading…</div></div>
+  </div>
+
+  <script>
+    // Live clock (always ticking regardless of data fetch)
+    function tickClock() {
+      const now = new Date();
+      document.getElementById('clock-time').textContent =
+        now.toLocaleTimeString('en-US', { hour12: false });
+      document.getElementById('clock-date').textContent =
+        now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+    }
+    setInterval(tickClock, 1000);
+    tickClock();
+
+    function fmtBytes(b) {
+      if (b >= 1e12) return (b / 1e12).toFixed(1) + ' TB';
+      if (b >= 1e9)  return (b / 1e9).toFixed(1) + ' GB';
+      if (b >= 1e6)  return (b / 1e6).toFixed(0) + ' MB';
+      return b + ' B';
+    }
+
+    function fmtUptime(secs) {
+      const d = Math.floor(secs / 86400);
+      const h = Math.floor((secs % 86400) / 3600);
+      const m = Math.floor((secs % 3600) / 60);
+      const parts = [];
+      if (d) parts.push(d + 'd');
+      if (h) parts.push(h + 'h');
+      parts.push(m + 'm');
+      return parts.join(' ');
+    }
+
+    function colorClass(pct) {
+      if (pct < 60) return 'color-low';
+      if (pct < 85) return 'color-mid';
+      return 'color-high';
+    }
+
+    function gaugeRow(label, pct, sub) {
+      const cls = colorClass(pct);
+      return `
+        <div class="gauge-row">
+          <span class="gauge-label">${label}</span>
+          <div class="gauge-bar"><div class="gauge-fill ${cls}" style="width:${pct}%"></div></div>
+          <span class="gauge-pct ${cls}">${pct}%</span>
+        </div>
+        ${sub ? `<div class="gauge-sub">${sub}</div>` : ''}
+      `;
+    }
+
+    function render(d) {
+      document.getElementById('device-name').innerHTML =
+        `<span class="dot"></span>${d.label}`;
+      document.getElementById('device-meta').textContent =
+        `${d.distro || d.platform} · ${d.arch} · ${d.hostname}`;
+
+      const cards = [];
+
+      // CPU
+      const cpuSub = d.cpu.temp != null ? `${d.cpu.temp}°C` : '';
+      cards.push(`
+        <div class="card">
+          <div class="card-title">CPU</div>
+          ${gaugeRow('Usage', d.cpu.load, cpuSub ? `Temp: ${cpuSub}` : '')}
+          ${d.cpu.cores ? `<div style="font-size:10px;color:var(--muted);margin-top:4px">${d.cpu.cores} threads</div>` : ''}
+        </div>
+      `);
+
+      // Memory
+      cards.push(`
+        <div class="card">
+          <div class="card-title">Memory</div>
+          ${gaugeRow('RAM', d.mem.pct, `${fmtBytes(d.mem.used)} / ${fmtBytes(d.mem.total)}`)}
+        </div>
+      `);
+
+      // Disks
+      if (d.disks.length > 0) {
+        const diskRows = d.disks.map(disk =>
+          gaugeRow(disk.mount, disk.pct, `${fmtBytes(disk.used)} / ${fmtBytes(disk.total)} · ${disk.fs}`)
+        ).join('');
+        cards.push(`
+          <div class="card">
+            <div class="card-title">Storage</div>
+            ${diskRows}
+          </div>
+        `);
+      }
+
+      // Network
+      if (d.nets.length > 0) {
+        const netRows = d.nets.map(n => `
+          <div class="net-row">
+            <span class="net-iface">${n.iface}</span>
+            <span class="net-ip">
+              ${n.ip4}
+              ${n.tailscale ? '<span class="ts-badge">Tailscale</span>' : ''}
+            </span>
+          </div>
+        `).join('');
+        cards.push(`
+          <div class="card">
+            <div class="card-title">Network</div>
+            ${netRows}
+          </div>
+        `);
+      }
+
+      // Uptime
+      cards.push(`
+        <div class="card">
+          <div class="card-title">Uptime</div>
+          <div class="uptime-val">${fmtUptime(d.uptime)}</div>
+        </div>
+      `);
+
+      document.getElementById('grid').innerHTML = cards.join('');
+    }
+
+    async function fetchStats() {
+      try {
+        const r = await fetch('/api/stats');
+        const d = await r.json();
+        if (d.error) throw new Error(d.error);
+        render(d);
+      } catch (e) {
+        document.getElementById('grid').innerHTML =
+          `<div class="card"><div class="error">Error: ${e.message}</div></div>`;
+      }
+    }
+
+    fetchStats();
+    setInterval(fetchStats, 3000);
+  </script>
+</body>
+</html>
