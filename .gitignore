@@ -1,1 +1,7 @@
 node_modules/
+
+# Environment / secrets (keep .env.example tracked)
+.env
+.env.local
+.env.*.local
+stack.env
