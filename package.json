@@ -4,7 +4,8 @@
   "description": "Per-device system dashboard for the Octopus network",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "node --test test/*.test.js"
   },
   "dependencies": {
     "express": "^4.19.2",
