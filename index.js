@@ -3,10 +3,26 @@
 const express = require('express');
 const si = require('systeminformation');
 const path = require('path');
+const { BUILD, STARTED_AT } = require('./build');
 
 const app = express();
 const PORT = process.env.PORT || 7000;
 const DEVICE_LABEL = process.env.DEVICE_LABEL || '';
+
+// ── Liveness and deploy verification ─────────────────────────────────────────
+//
+// Portainer polls and reports back to nobody, so without a value that moves
+// when the code moves, a deploy that never landed and one that landed without
+// helping look identical from outside. The stamp covers public/index.html,
+// which IS the client here — the page carries its CSS and JS inline — so a UI
+// change moves it too. `unknown` is never `current`.
+app.get('/health', (_req, res) => res.json({ ok: true, service: 'octopus-dash' }));
+app.get('/api/build', (_req, res) => res.json({
+  ok: true,
+  service: 'octopus-dash',
+  build: BUILD,
+  startedAt: STARTED_AT,
+}));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
