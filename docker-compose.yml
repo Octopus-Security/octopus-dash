@@ -4,7 +4,7 @@ services:
     container_name: octopus_dash
     restart: unless-stopped
     ports:
-      - "7000:7000"
+      - "${TAILSCALE_IP:-100.92.221.67}:7000:7000"   # tailnet only; host must own this IP
     environment:
       - PORT=7000
       - DEVICE_LABEL=${DEVICE_LABEL:-Hetzner Server}
