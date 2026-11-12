@@ -6,6 +6,7 @@ services:
     ports:
       - "${TAILSCALE_IP:-100.92.221.67}:7000:7000"   # tailnet only; host must own this IP
     environment:
+      - NODE_ENV=${NODE_ENV:-production}
       - PORT=7000
       - DEVICE_LABEL=${DEVICE_LABEL:-Hetzner Server}
     # Read-only host mounts so systeminformation can read real metrics
