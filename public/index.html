@@ -268,6 +268,11 @@
     @media (min-width: 1280px) {
       body { padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
     }
+    /* Layout & text rules (octopus-kit docs/layout.md rules 1, 2, 4, 5, 7). */
+    html { background-color: var(--bg); }
+    body { overflow-x: clip; overflow-wrap: break-word; hyphens: manual; }
+    code, kbd { overflow-wrap: anywhere; box-decoration-break: clone; }
+    img, video, svg { max-width: 100%; }
   </style>
 </head>
 <body>
